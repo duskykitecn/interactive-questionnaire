@@ -20,7 +20,7 @@
 
 ## 效果预览
 
-克隆仓库后用浏览器直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)，可以看到全部 12 种组件的交互演示（含明暗主题、异议与「改用文字填写」入口、结果 JSON 生成）。
+**在线演示**：https://duskykitecn.github.io/interactive-questionnaire/ —— 全部 12 种组件的交互演示（含明暗主题、异议与「改用文字填写」入口、结果 JSON 生成），打开即用。也可以克隆仓库后用浏览器直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html) 在本地查看。
 
 ## 安装
 
