@@ -1,0 +1,9 @@
+<div class="field" data-field="<FIELD_ID>" data-type="rank" data-items="<ITEM_1>,<ITEM_2>,<ITEM_3>" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL></span><span class="ctype">rank</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary"><div class="hint" style="margin-bottom:9px">拖动排序，越靠上越看重（也可用右侧箭头）</div><div class="rank"></div><div class="addrow" style="margin-top:9px"><input type="text" placeholder="添加自定义项，回车加入"><button type="button" class="addbtn" data-rankadd="1">添加</button></div></div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 优先级排序：待排项写进 data-items（逗号分隔）；<div class="rank"></div> 必须留空，JS 据 data-items 填充。 -->

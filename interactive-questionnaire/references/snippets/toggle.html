@@ -1,0 +1,13 @@
+<div class="field" data-field="<FIELD_ID>" data-type="toggle" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL></span><span class="ctype">toggle-reveal</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary">
+      <div class="toggle-row"><span style="font-size:13.5px;color:var(--muted)"><TOGGLE_HINT></span><button class="switch" aria-pressed="false" aria-label="<QUESTION_LABEL>"></button></div>
+      <div class="reveal cond"><div class="field" data-field="<REVEAL_FIELD_ID>" data-type="text" data-label="<REVEAL_LABEL>" data-default=""><div class="hint" style="margin:0 0 6px"><REVEAL_LABEL></div><input type="text" placeholder="<REVEAL_PLACEHOLDER>"></div></div>
+    </div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 是/否开关；开启后需追问 → 用 .reveal.cond 内嵌一个 text 子字段（其 data-field 独立回传）。
+     若只要是/否、不追问：删掉整个 <div class="reveal cond">...</div>。 -->

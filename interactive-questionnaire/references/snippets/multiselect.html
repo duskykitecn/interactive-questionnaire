@@ -1,0 +1,17 @@
+<div class="field" data-field="<FIELD_ID>" data-type="multiselect" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL>（可多选）</span><span class="ctype">multi-select</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary">
+      <div class="mlist" aria-label="<QUESTION_LABEL>">
+        <div class="mrow" aria-pressed="true"><span class="check"></span><span class="mlabel"><OPTION_1></span></div>
+        <div class="mrow" aria-pressed="false"><span class="check"></span><span class="mlabel"><OPTION_2></span></div>
+        <div class="mrow" aria-pressed="false"><span class="check"></span><span class="mlabel"><OPTION_3></span></div>
+      </div>
+      <button class="chip add msadd-btn" type="button" data-addms="1">＋ 自定义</button>
+      <div class="reveal ms-add"><div class="addrow"><input type="text" placeholder="输入自定义项目，回车添加"><button type="button" class="addbtn">添加</button></div></div>
+    </div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 多选、选项较多或较长（方选列表）。可零或多个 aria-pressed="true"。 -->

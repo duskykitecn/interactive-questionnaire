@@ -1,0 +1,9 @@
+<div class="field" data-field="<FIELD_ID>" data-type="range" data-prefix="<PREFIX>" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL></span><span class="ctype">range</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary"><div class="dual"><div class="base"></div><div class="fill"></div><input type="range" class="r-min" min="<MIN>" max="<MAX>" step="<STEP>" value="<VALUE_MIN>" aria-label="下限"><input type="range" class="r-max" min="<MIN>" max="<MAX>" step="<STEP>" value="<VALUE_MAX>" aria-label="上限"></div><div class="ticks"><span><PREFIX><MIN></span><span><PREFIX><MAX></span></div></div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 双滑块区间（下限+上限）：两个 input 同 min/max/step；VALUE_MIN < VALUE_MAX 为预选区间。data-prefix 可省。 -->

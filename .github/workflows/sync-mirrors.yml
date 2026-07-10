@@ -1,0 +1,54 @@
+# 可选：把主库自动镜像到 Gitee / CNB（方案 B，默认全部关闭）。
+# 启用方法见 PUBLISHING.md「方案 B」，两个镜像各自独立开关：
+#   Gitee: Secrets 加 GITEE_SSH_PRIVATE_KEY，Variables 加 GITEE_SYNC_ENABLED=true
+#   CNB : Secrets 加 CNB_TOKEN，          Variables 加 CNB_SYNC_ENABLED=true
+# 未配置对应变量时任务直接跳过，不会报错。
+# 注意：镜像是强制推送，Gitee / CNB 上的直接改动会被覆盖，统一只在主库开发。
+name: Sync mirrors
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  gitee:
+    if: ${{ vars.GITEE_SYNC_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出完整历史（含全部分支与标签）
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 强制镜像推送到 Gitee
+        env:
+          GITEE_SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$GITEE_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan gitee.com >> ~/.ssh/known_hosts
+          git remote add gitee git@gitee.com:duskykite/interactive-questionnaire.git
+          # 用 origin 的远程分支引用做镜像，避免检出处于分离 HEAD 时无本地分支可推
+          git push gitee 'refs/remotes/origin/*:refs/heads/*' --force
+          git push gitee --tags --force
+
+  cnb:
+    if: ${{ vars.CNB_SYNC_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出完整历史（含全部分支与标签）
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 强制镜像推送到 CNB
+        env:
+          CNB_TOKEN: ${{ secrets.CNB_TOKEN }}
+        run: |
+          # CNB 走 HTTPS 令牌认证：用户名固定为 cnb，密码为访问令牌
+          git remote add cnb "https://cnb:${CNB_TOKEN}@cnb.cool/DuskyKite/interactive-questionnaire.git"
+          git push cnb 'refs/remotes/origin/*:refs/heads/*' --force
+          git push cnb --tags --force

@@ -1,0 +1,12 @@
+<div class="field" data-field="<FIELD_ID>" data-type="chips" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL>（可多选）</span><span class="ctype">chips</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary">
+      <div class="chips"><button class="chip" aria-pressed="true"><OPTION_1></button><button class="chip" aria-pressed="false"><OPTION_2></button><button class="chip" aria-pressed="false"><OPTION_3></button><button class="chip add" type="button" data-addchip="1">＋ 自定义</button></div>
+      <div class="reveal chip-add"><div class="addrow"><input type="text" placeholder="输入自定义选项，回车添加"><button type="button" class="addbtn">添加</button></div></div>
+    </div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 多选、选项少且短（标签墙）。可零或多个 aria-pressed="true"；保留末尾"＋ 自定义"按钮与其后的 .chip-add 行。 -->

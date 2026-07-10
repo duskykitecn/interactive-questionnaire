@@ -1,0 +1,33 @@
+# 推送 vX.Y.Z 标签时：打包 skill → 创建 GitHub Release 并附上 .skill / .zip
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: 打包 skill（版本号取自标签）
+        run: python scripts/package.py "${GITHUB_REF_NAME#v}"
+
+      - name: 创建 Release 并上传产物
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.skill
+            dist/*.zip
+          generate_release_notes: true

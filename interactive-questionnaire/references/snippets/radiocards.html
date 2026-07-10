@@ -1,0 +1,9 @@
+<div class="field" data-field="<FIELD_ID>" data-type="radiocards" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL></span><span class="ctype">radio-cards</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary"><div class="cards"><button class="rcard" aria-pressed="false" data-value="<OPTION_VALUE_1>"><div class="rt"><OPTION_TITLE_1></div><div class="rd"><OPTION_DESC_1></div></button><button class="rcard" aria-pressed="true" data-value="<OPTION_VALUE_2>"><div class="rt"><OPTION_TITLE_2></div><div class="rd"><OPTION_DESC_2></div></button><button class="rcard" aria-pressed="false" data-value="<OPTION_VALUE_3>"><div class="rt"><OPTION_TITLE_3></div><div class="rd"><OPTION_DESC_3></div></button></div></div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 单选卡片：每张有标题(rt)+一句说明(rd)，适合需要解释的档位。恰好一个 aria-pressed="true"；data-value 为回传值。 -->

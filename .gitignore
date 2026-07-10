@@ -1,0 +1,10 @@
+# 打包产物（Release 由 CI 生成，不入库）
+dist/
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统杂项
+.DS_Store
+Thumbs.db

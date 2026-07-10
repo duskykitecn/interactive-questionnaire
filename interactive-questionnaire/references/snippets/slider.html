@@ -1,0 +1,11 @@
+<div class="field" data-field="<FIELD_ID>" data-type="slider" data-mode="label" data-labels="<LABEL_1>,<LABEL_2>,<LABEL_3>" data-label="<QUESTION_LABEL>">
+  <div class="fhead"><span class="htitle"><span class="name"><QUESTION_LABEL></span><span class="ctype">slider</span></span></div>
+  <div class="fbody">
+    <div class="qdesc"><QUESTION_DESC></div>
+    <div class="primary"><input type="range" class="single" min="0" max="2" step="1" value="1" aria-label="<QUESTION_LABEL>"><div class="ticks"><span><LABEL_1></span><span><LABEL_2></span><span><LABEL_3></span></div></div>
+    <div class="cust"><button class="cust-toggle">＋ 改用文字填写</button><div class="reveal cust-reveal"><input type="text" class="cust-input" placeholder="<CUSTOM_PLACEHOLDER>"></div></div>
+  </div>
+</div>
+<!-- 档位滑块（label 模式）：data-labels 与 .ticks 的 span 一一对应；min=0 max=档位数-1 step=1，value=预选档位下标。
+     数值模式：改成 data-mode="number" data-prefix="<PREFIX>" data-suffix="<SUFFIX>"（删掉 data-labels），
+     input 用真实 min/max/step/value，.ticks 两个 span 为 <PREFIX><MIN> 和 <PREFIX><MAX>+。示例见 assets/demo.html 的 budget_per_day。 -->
