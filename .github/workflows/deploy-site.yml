@@ -1,0 +1,83 @@
+# push 到 main 时：构建演示站并推到组织 pages 总仓（只改本项目那一层目录）。
+# 本仓库的 GitHub Pages 仍由仓库根 index.html 随 main 自动发布，无需本工作流。
+# 总仓同步默认关闭。启用方法见 PUBLISHING.md「演示站」：
+#   Secrets: PAGES_DEPLOY_TOKEN（只授 duskykitecn/pages 写权限的 PAT，不要贴进对话）
+#   Variables: PAGES_DEPLOY_ENABLED=true
+#             PAGES_REPO=duskykitecn/pages   （可改，须与总仓一致）
+# 未打开开关时 pages-hub 任务直接跳过。
+name: Deploy demo site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - interactive-questionnaire/assets/demo.html
+      - scripts/build_site.py
+      - .github/workflows/deploy-site.yml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-demo-site
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: 构建演示站
+        run: python scripts/build_site.py
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/site
+          retention-days: 7
+
+  pages-hub:
+    needs: build
+    if: ${{ vars.PAGES_DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下载构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist/site
+
+      - name: 检出 pages 总仓
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.PAGES_REPO != '' && vars.PAGES_REPO || 'duskykitecn/pages' }}
+          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          path: pages-hub
+
+      - name: 只更新本项目目录并推送
+        working_directory: pages-hub
+        env:
+          PROJECT_SLUG: interactive-questionnaire
+        run: |
+          set -euo pipefail
+          src="../dist/site/${PROJECT_SLUG}"
+          test -f "${src}/index.html"
+          rm -rf "${PROJECT_SLUG}"
+          mkdir -p "${PROJECT_SLUG}"
+          cp -R "${src}/." "${PROJECT_SLUG}/"
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "${PROJECT_SLUG}" .nojekyll
+          if git diff --cached --quiet; then
+            echo "总仓中 ${PROJECT_SLUG}/ 无变化，跳过推送"
+            exit 0
+          fi
+          git commit -m "chore: update ${PROJECT_SLUG} demo"
+          git push

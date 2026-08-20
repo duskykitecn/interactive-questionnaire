@@ -20,7 +20,13 @@
 
 ## 效果预览
 
-**在线演示**：https://duskykitecn.github.io/interactive-questionnaire/ —— 全部 12 种组件的交互演示（含明暗主题、异议与「改用文字填写」入口、结果 JSON 生成），打开即用。也可以克隆仓库后用浏览器直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html) 在本地查看。
+**在线演示**（三处同一份 `demo.html`）：
+
+- 国内：https://pages.duskykite.com.cn/interactive-questionnaire/
+- 海外：https://pages.duskykite.xyz/interactive-questionnaire/
+- GitHub Pages：https://duskykitecn.github.io/interactive-questionnaire/
+
+全部 12 种组件（明暗主题、异议与「改用文字填写」、结果 JSON）。push 到 `main` 后本仓库 GitHub Pages 自动更新；自定义域名走组织 `pages` 总仓的 `/interactive-questionnaire/`，首次接入见 [PUBLISHING.md](PUBLISHING.md)「演示站」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
 
 ## 安装
 
@@ -77,10 +83,13 @@ interactive-questionnaire/            ← 仓库根
 ├── CHANGELOG.md                      ← 版本记录（Keep a Changelog）
 ├── PUBLISHING.md                     ← 维护者手册：发版流程、GitHub/Gitee/CNB 多平台同步
 ├── scripts/
-│   └── package.py                    ← 本地打包脚本（仅需 Python 3 标准库）
+│   ├── package.py                    ← 本地打包脚本（仅需 Python 3 标准库）
+│   └── build_site.py                 ← 把 demo.html 打成 /项目名/ 静态站点
 ├── .github/workflows/
 │   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
-│   └── sync-mirrors.yml              ← 可选：自动镜像到 Gitee / CNB（默认关闭）
+│   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/pages（默认关闭）
+│   └── sync-mirrors.yml              ← 可选：GitHub Actions 推镜像（默认关闭；CNB 请用 .cnb.yml git-sync）
+├── .cnb.yml                          ← CNB 镜像：定时 git-sync 从 GitHub 拉取
 └── interactive-questionnaire/        ← 技能实体（安装/打包的对象就是这一层）
     ├── SKILL.md                      ← 入口：路由规则、文字版约定、装配流程、JSON 契约
     ├── assets/

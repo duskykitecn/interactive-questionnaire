@@ -5,6 +5,10 @@ dist/
 __pycache__/
 *.pyc
 
+# 本机草稿（问卷、试写）；只跟踪 local/.gitignore
+local/*
+!local/.gitignore
+
 # 系统杂项
 .DS_Store
 Thumbs.db

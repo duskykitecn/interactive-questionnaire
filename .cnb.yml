@@ -1,0 +1,17 @@
+# CNB 镜像仓：定时从 GitHub 主库拉取（tencentcom/git-sync）。
+# 密钥在 CNB 仓库「环境变量 / 密钥库」里配 GIT_USERNAME、GIT_ACCESS_TOKEN，不要写进本文件。
+# 勿与 GitHub Actions 的 CNB_SYNC_ENABLED 同时打开，两边对推会互相覆盖。
+main:
+  "crontab: 0 */2 * * *":
+    - name: sync from github
+      stages:
+        - name: sync from github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/duskykitecn/interactive-questionnaire.git
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
+            sync_mode: pull
+            push_tags: true
+            force: true
