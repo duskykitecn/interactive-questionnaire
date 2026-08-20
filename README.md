@@ -1,20 +1,20 @@
 # interactive-questionnaire
 
-> 一个 Claude Agent Skill：把 Claude 对你的零散追问，变成结构化的问卷。
-> A Claude Agent Skill that turns Claude's scattered follow-up questions into structured questionnaires (plain-text or interactive HTML) with machine-parsable JSON answers.
+> 一份智能体技能：把智能体对你的零散追问，变成结构化的问卷。
+> An Agent Skill that turns an agent's scattered follow-up questions into structured questionnaires (plain-text or interactive HTML) with machine-parsable JSON answers.
 
 ![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)
 ![Release](https://img.shields.io/github/v/release/duskykitecn/interactive-questionnaire)
-![Platform](https://img.shields.io/badge/Platform-Claude-d97757)
+![Agent Skills](https://img.shields.io/badge/Agent_Skills-compatible-4B57D6)
 
 ## 这是什么
 
-与 Claude 协作时，它常常需要向你收集偏好、需求或决策。默认行为是想到哪问到哪：问题散落在多轮对话里，答案是一段段散文，既费你的心力，也难被稳定解析。
+与智能体协作时，它常常需要向你收集偏好、需求或决策。默认行为是想到哪问到哪：问题散落在多轮对话里，答案是一段段散文，既费你的心力，也难被稳定解析。
 
-本 skill 让 Claude 的**每一次提问**都走两条规范路线之一：
+本技能让智能体的**每一次提问**都走两条规范路线之一：
 
 - **简单提问 → 文字版**：编号列出问题（题号 `1.` `2.`、选项号 `a.` `b.`），每题附一段「为什么问、要解决什么、推荐怎么选」的描述，你用 `1: a,c` 这样的方式作答即可。
-- **复杂提问 → HTML 交互问卷**：Claude 用内置模板与 12 种组件（单选、多选、开关追问、滑杆、区间、计数、文本、排序等）装配出一份可交互问卷，你逐题填写后点「复制结果」，把结构化 JSON 回贴给 Claude 解析。
+- **复杂提问 → HTML 交互问卷**：智能体用内置模板与 12 种组件（单选、多选、开关追问、滑杆、区间、计数、文本、排序等）装配出一份可交互问卷，你逐题填写后点「复制结果」，把结构化 JSON 回贴给智能体解析。
 
 配套约束：**一经调用，对整个会话持续生效**——不会问完一份问卷就退回随口散问；每轮回复结尾有一次静默自检，发现散问会当场按规范补上。
 
@@ -24,40 +24,49 @@
 
 ## 安装
 
-Skill 的本质是一个含 `SKILL.md` 的文件夹；安装就是把这个文件夹交给对应的 Claude 产品。三个入口任选：
+这是一份符合 [Agent Skills](https://agentskills.io) 规范的**智能体技能**：本质是一个含 `SKILL.md` 的文件夹。安装就是把这个文件夹放到智能体应用会扫描的技能目录（路径中一般为 `skills`），或通过该应用提供的技能上传入口导入。
 
-### 1. claude.ai（网页版 / 客户端）
+复制的必须是**仓库根目录下的同名子文件夹**（即含 `SKILL.md` 的那层），不是整个仓库。
 
-1. 从 [Releases](https://github.com/duskykitecn/interactive-questionnaire/releases) 下载最新的 `interactive-questionnaire-vX.Y.Z.zip`（`.skill` 与 `.zip` 内容相同，上传入口若只认 `.zip` 就用后者）。
-2. 打开 claude.ai 的 **设置 → 功能（Settings → Capabilities）**，在 Skills 区域上传该压缩包。
-3. 需要 Pro / Max / Team / Enterprise 套餐并开启代码执行；上传的自定义 skill 属于个人，不在组织内共享。详见[官方 Agent Skills 文档](https://platform.claude.com/docs/zh-CN/agents-and-tools/agent-skills/overview)。
+### 放入技能目录
 
-### 2. Claude Code
-
-把 skill 文件夹放进 Claude Code 扫描的目录即可：
+个人级（对当前用户的所有项目生效），以常见智能体应用为例：
 
 ```bash
-# 个人级（对所有项目生效）
 git clone https://github.com/duskykitecn/interactive-questionnaire.git
+
+# Cursor
+mkdir -p ~/.cursor/skills
+cp -r interactive-questionnaire/interactive-questionnaire ~/.cursor/skills/
+
+# Claude Code
 mkdir -p ~/.claude/skills
 cp -r interactive-questionnaire/interactive-questionnaire ~/.claude/skills/
-
-# 或项目级（随仓库共享给团队）：复制到项目根的 .claude/skills/ 下
 ```
 
-Windows 对应目录为 `%USERPROFILE%\.claude\skills\`。注意复制的是**仓库根目录下的同名子文件夹**（即含 `SKILL.md` 的那层）。
+项目级（随仓库共享给团队）：复制到项目根下该应用约定的目录，例如 `.cursor/skills/`、`.claude/skills/`。其他兼容 Agent Skills 的智能体应用，目录名以各自文档为准，做法相同。
 
-### 3. Claude API（Skills API）
+Windows 将 `~` 换成 `%USERPROFILE%`。
 
-通过 `/v1/skills` 端点把打包好的 zip 上传到工作区，再在请求中引用返回的 `skill_id`。详见[官方 Skills API 文档](https://platform.claude.com/docs/zh-CN/agents-and-tools/agent-skills/overview)。
+### 以压缩包上传
+
+部分智能体应用只接受压缩包。先打包：
+
+```bash
+python scripts/package.py
+```
+
+产物在 `dist/`：`interactive-questionnaire-vX.Y.Z.skill` 与同内容的 `.zip`。压缩包以技能文件夹为根（`interactive-questionnaire/SKILL.md`），与 Agent Skills 的 `.skill` 包结构一致。上传入口若只认 `.zip` 就用后者。
+
+例如 claude.ai 在 **设置 → 功能（Settings → Capabilities）** 的 Skills 区域上传（需相应套餐并开启代码执行；自定义技能通常仅对当前账号生效）；Claude API 则通过 `/v1/skills` 上传后再引用返回的 `skill_id`。
 
 ## 用法
 
-- **触发**：对话中点名 `interactive-questionnaire`（或在支持的产品里用斜杠命令 `/interactive-questionnaire`）显式启用；启用后凡 Claude 需要向你提问的场合都会按本 skill 组织。
+- **触发**：对话中点名 `interactive-questionnaire`（或在支持的应用里用斜杠命令 `/interactive-questionnaire`）显式启用；启用后凡智能体需要向你提问的场合都会按本技能组织。
 - **文字版作答**：选择题按选项字母回答（多选给多个字母，如 `1: a,c`），自由题直接写文字。
 - **HTML 问卷作答**：逐题填写（每题都可点「＋ 改用文字填写」换成自由文字，或提出异议），完成后点「复制结果」，把 JSON 粘贴回对话。
-- **结果 JSON**：每题一个条目，三种形态——`answer`（按控件作答，带 `dirty` 标记区分是否改过默认值）、`custom`（自由文字）、`objection`(异议)；另有 `system` 元信息（主题、展示 / 折叠模式）。字段契约详见 [`interactive-questionnaire/SKILL.md`](interactive-questionnaire/SKILL.md)。
-- **停止**：明确告诉 Claude 停用即可。
+- **结果 JSON**：每题一个条目，三种形态——`answer`（按控件作答，带 `dirty` 标记区分是否改过默认值）、`custom`（自由文字）、`objection`（异议）；另有 `system` 元信息（主题、展示 / 折叠模式）。字段契约详见 [`interactive-questionnaire/SKILL.md`](interactive-questionnaire/SKILL.md)。
+- **停止**：明确告诉智能体停用即可。
 
 ## 目录结构
 
@@ -72,7 +81,7 @@ interactive-questionnaire/            ← 仓库根
 ├── .github/workflows/
 │   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
 │   └── sync-mirrors.yml              ← 可选：自动镜像到 Gitee / CNB（默认关闭）
-└── interactive-questionnaire/        ← skill 实体（安装/打包的对象就是这一层）
+└── interactive-questionnaire/        ← 技能实体（安装/打包的对象就是这一层）
     ├── SKILL.md                      ← 入口：路由规则、文字版约定、装配流程、JSON 契约
     ├── assets/
     │   ├── template.html             ← HTML 问卷外壳模板
@@ -89,7 +98,7 @@ python scripts/package.py          # 版本号自动取 CHANGELOG.md 最新一�
 python scripts/package.py 1.2.0    # 或显式指定
 ```
 
-产物在 `dist/` 下：`interactive-questionnaire-vX.Y.Z.skill` 与同内容的 `.zip`。压缩包以 skill 文件夹为根（`interactive-questionnaire/SKILL.md`），与官方 `.skill` 包结构一致，可直接上传 claude.ai 或 Skills API。
+产物在 `dist/` 下：`interactive-questionnaire-vX.Y.Z.skill` 与同内容的 `.zip`。
 
 ## 版本与发布
 

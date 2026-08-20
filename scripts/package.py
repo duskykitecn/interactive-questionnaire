@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把 skill 文件夹打包成可分发的 .skill 包（本质是 zip，压缩包根即 skill 文件夹）。
+"""把技能文件夹打包成可分发的 .skill 包（本质是 zip，压缩包根即技能文件夹）。
 
 用法:
     python scripts/package.py            # 版本号取 CHANGELOG.md 最新一条
@@ -24,7 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = REPO_ROOT / SKILL_NAME
 DIST_DIR = REPO_ROOT / "dist"
 
-# 打包时排除的杂项（与官方 skill-creator 的打包脚本口径一致）
+# 打包时排除的杂项（与 Agent Skills skill-creator 的打包脚本口径一致）
 EXCLUDE_DIR_NAMES = {"__pycache__", "node_modules", ".git"}
 EXCLUDE_FILE_NAMES = {".DS_Store", "Thumbs.db"}
 EXCLUDE_SUFFIXES = {".pyc"}
@@ -89,12 +89,12 @@ def build(version: str) -> Path:
         p for p in SKILL_DIR.rglob("*") if p.is_file() and not should_exclude(p)
     )
     if not files:
-        fail("skill 目录里没有可打包的文件")
+        fail("技能目录里没有可打包的文件")
 
     with zipfile.ZipFile(skill_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for f in files:
-            # 压缩包内路径以 skill 文件夹名开头，如
-            # interactive-questionnaire/SKILL.md —— 与官方 .skill 包结构一致
+            # 压缩包内路径以技能文件夹名开头，如
+            # interactive-questionnaire/SKILL.md —— 与 Agent Skills 的 .skill 包结构一致
             arcname = f"{SKILL_NAME}/{f.relative_to(SKILL_DIR).as_posix()}"
             zf.write(f, arcname)
             print(f"  + {arcname}")

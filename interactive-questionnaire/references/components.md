@@ -8,7 +8,7 @@
 2. 替换顶部两个占位：`<QUESTIONNAIRE_TITLE>`（问卷标题）、`<QUESTIONNAIRE_SUBTITLE>`（一句副标题；不要写填写说明）。
 3. 每个要问的问题：从 `snippets/` 取对应组件片段，替换其中 `<大写下划线>` 占位（见下表与片段末尾注释），删掉片段末尾的 `<!-- ... -->` 注释行。
 4. 把填好的片段按提问顺序拼接，整体替换模板里那一行 `<!-- QUESTION_FIELDS -->`。
-5. 完成的 HTML 作为 artifact 交给用户；用户填完点「复制结果」得到 JSON 回贴。
+5. 把完成的 HTML 交给用户打开填写；用户填完点「复制结果」得到 JSON 回贴。
 
 > `data-field` 必须**全问卷唯一**、用 **snake_case**——它就是结果 JSON 里该题的 key。`<QUESTION_LABEL>` 要**同时**填进 `data-label` 和 `.name`（两处一致）。
 

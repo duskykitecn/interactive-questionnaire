@@ -1,4 +1,4 @@
-# 推送 vX.Y.Z 标签时：打包 skill → 创建 GitHub Release 并附上 .skill / .zip
+# 推送 vX.Y.Z 标签时：打包技能 → 创建 GitHub Release 并附上 .skill / .zip
 name: Release
 
 on:
@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: 打包 skill（版本号取自标签）
+      - name: 打包技能（版本号取自标签）
         run: python scripts/package.py "${GITHUB_REF_NAME#v}"
 
       - name: 创建 Release 并上传产物

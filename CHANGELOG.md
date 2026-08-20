@@ -4,11 +4,13 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循[语义化版本 SemVer](https://semver.org/lang/zh-CN/)。
-针对本 skill 的版本号判据见 [PUBLISHING.md](PUBLISHING.md)。
+针对本技能的版本号判据见 [PUBLISHING.md](PUBLISHING.md)。
 
 ## [未发布]
 
-（暂无）
+### 变更
+
+- 对外文案不再限定 Claude：提问方统称智能体；本仓库按 Agent Skills 规范称为智能体技能。安装改为「放入智能体应用的技能目录 / 压缩包上传」，产品名仅作为应用示例。演示页与问卷模板的回传提示、技能正文中的「skill / artifact」同步改为标准称呼。
 
 ## [1.0.0] - 2026-07-10
 
