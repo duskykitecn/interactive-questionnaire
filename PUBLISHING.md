@@ -55,7 +55,7 @@ git push --mirror https://cnb.cool/DuskyKite/interactive-questionnaire.git
 
 **日常**：主库 `git push` 之后最多等一个 crontab 周期；发版打了 `v*` 标签也会被 `push_tags` 拉过去。GitHub Release 附件不会出现在 CNB。国内下载走 `static.duskykite.com.cn`，见下文「静态托管」。
 
-密钥不写进 `.cnb.yml`，放在组织密钥仓 `DuskyKite/secrets`。密钥文件若声明了 `allow_images`，`imports` 必须写在 `tencentcom/git-sync` 插件任务上，不能写在流水线层，否则会报「只能在插件任务引用」。CNB 没有关闭 Issue / PR 的开关，简介写明镜像即可。
+密钥不写进 `.cnb.yml`，放在组织密钥仓 `DuskyKite/secrets`。密钥文件若声明了 `allow_images`，`imports` 必须写在 `tencentcom/git-sync` 插件任务上，不能写在流水线层，否则会报「只能在插件任务引用」。`allow_events` 必须写成完整事件名（如 `"crontab: 0 */2 * * *"`），只写 `crontab` 对不上。CNB 没有关闭 Issue / PR 的开关，简介写明镜像即可。
 
 ### 镜像平台的发行版
 
