@@ -1,6 +1,6 @@
 # 维护者手册：发版与多平台同步
 
-面向仓库维护者。使用者只需看 [README.md](README.md)。
+面向仓库维护者。使用者看 [README.md](README.md)（英文）或 [README.zh-CN.md](README.zh-CN.md)（简体中文）。
 
 ## 总体分工
 

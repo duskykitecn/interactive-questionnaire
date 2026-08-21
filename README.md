@@ -1,42 +1,43 @@
 # interactive-questionnaire
 
-> 一份智能体技能：把智能体对你的零散追问，变成结构化的问卷。
+English | [简体中文](README.zh-CN.md)
+
 > An Agent Skill that turns an agent's scattered follow-up questions into structured questionnaires (plain-text or interactive HTML) with machine-parsable JSON answers.
 
 ![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)
 ![Release](https://img.shields.io/github/v/release/duskykitecn/interactive-questionnaire)
 ![Agent Skills](https://img.shields.io/badge/Agent_Skills-compatible-4B57D6)
 
-## 这是什么
+## What this is
 
-与智能体协作时，它常常需要向你收集偏好、需求或决策。默认行为是想到哪问到哪：问题散落在多轮对话里，答案是一段段散文，既费你的心力，也难被稳定解析。
+When an agent needs your preferences, requirements, or a decision, the default is to ask as thoughts occur: questions scattered across turns, answers as prose. That is tiring to fill in and hard to parse reliably.
 
-本技能让智能体的**每一次提问**都走两条规范路线之一：
+This skill routes **every** question the agent would ask you onto one of two tracks:
 
-- **简单提问 → 文字版**：编号列出问题（题号 `1.` `2.`、选项号 `a.` `b.`），每题附一段「为什么问、要解决什么、推荐怎么选」的描述，你用 `1: a,c` 这样的方式作答即可。
-- **复杂提问 → HTML 交互问卷**：智能体用内置模板与 12 种组件（单选、多选、开关追问、滑杆、区间、计数、文本、排序等）装配出一份可交互问卷，你逐题填写后点「复制结果」，把结构化 JSON 回贴给智能体解析。
+- **Simple → plain text**: numbered questions (`1.` `2.`) and lettered options (`a.` `b.`), each with a short note on why it is asked, what it decides, and a recommended choice. Reply like `1: a,c`.
+- **Complex → interactive HTML**: the agent assembles a form from a built-in template and 12 components (single/multi select, reveal toggles, sliders, ranges, steppers, text, ranking, and so on). You fill it in, click Copy result, and paste structured JSON back.
 
-配套约束：**一经调用，对整个会话持续生效**——不会问完一份问卷就退回随口散问；每轮回复结尾有一次静默自检，发现散问会当场按规范补上。
+Once this skill is invoked, it stays in effect for the rest of the conversation. A silent end-of-turn check catches questions that slipped back into free-form chat and restates them in the required format.
 
-## 效果预览
+## Demo
 
-**在线演示**（三处同一份 `demo.html`）：
+The same `demo.html` is served in three places:
 
-- 国内：https://static.duskykite.com.cn/interactive-questionnaire/
-- 海外：https://static.duskykite.xyz/interactive-questionnaire/
-- GitHub Pages：https://duskykitecn.github.io/interactive-questionnaire/
+- China: https://static.duskykite.com.cn/interactive-questionnaire/
+- International: https://static.duskykite.xyz/interactive-questionnaire/
+- GitHub Pages: https://duskykitecn.github.io/interactive-questionnaire/
 
-全部 12 种组件（明暗主题、异议与「改用文字填写」、结果 JSON）。push 到 `main` 后本仓库 GitHub Pages 自动更新；自定义域名走组织 `static` 总仓的 `/interactive-questionnaire/`，首次接入见 [PUBLISHING.md](PUBLISHING.md)「静态托管」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
+All 12 components, light/dark theme, objections, “answer in text instead”, and result JSON. After a push to `main`, this repo’s GitHub Pages updates on its own; the custom hostnames are served from the org `static` hub under `/interactive-questionnaire/`. Maintainer setup is in [PUBLISHING.md](PUBLISHING.md) (Chinese). You can also open [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html) locally.
 
-## 安装
+## Install
 
-这是一份符合 [Agent Skills](https://agentskills.io) 规范的**智能体技能**：本质是一个含 `SKILL.md` 的文件夹。安装就是把这个文件夹放到智能体应用会扫描的技能目录（路径中一般为 `skills`），或通过该应用提供的技能上传入口导入。
+This is an [Agent Skills](https://agentskills.io) package: a folder that contains `SKILL.md`. Install it by copying that folder into the host app’s skills directory (the path usually includes `skills`), or by uploading it through the app’s skill import UI.
 
-复制的必须是**仓库根目录下的同名子文件夹**（即含 `SKILL.md` 的那层），不是整个仓库。
+Copy the **nested** `interactive-questionnaire/` folder (the one with `SKILL.md`), not the whole git repo.
 
-### 放入技能目录
+### Skills directory
 
-个人级（对当前用户的所有项目生效），以常见智能体应用为例：
+User-level (all projects for the current account), using common host apps as examples:
 
 ```bash
 git clone https://github.com/duskykitecn/interactive-questionnaire.git
@@ -50,80 +51,88 @@ mkdir -p ~/.claude/skills
 cp -r interactive-questionnaire/interactive-questionnaire ~/.claude/skills/
 ```
 
-项目级（随仓库共享给团队）：复制到项目根下该应用约定的目录，例如 `.cursor/skills/`、`.claude/skills/`。其他兼容 Agent Skills 的智能体应用，目录名以各自文档为准，做法相同。
+Project-level (shared with a team): copy into whatever directory that app documents, e.g. `.cursor/skills/` or `.claude/skills/`. Other Agent Skills hosts use their own folder names; the copy is the same.
 
-Windows 将 `~` 换成 `%USERPROFILE%`。
+On Windows, replace `~` with `%USERPROFILE%`.
 
-### 以压缩包上传
+### Upload a package
 
-部分智能体应用只接受压缩包。国内请走静态托管（不经过 GitHub）：
+Some hosts only accept an archive. The archive root must be the skill folder (`interactive-questionnaire/SKILL.md`). Use the `.zip` if the upload UI does not accept `.skill`.
 
-- `.skill`：https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.skill
-- `.zip`：https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.zip
+China (does not go through GitHub):
 
-海外同一路径把主机名换成 `static.duskykite.xyz`。GitHub Releases 仍有同名附件。压缩包以技能文件夹为根（`interactive-questionnaire/SKILL.md`）。上传入口若只认 `.zip` 就用后者。
+- `.skill`: https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.skill
+- `.zip`: https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.zip
 
-本地打包：
+International:
+
+- `.skill`: https://static.duskykite.xyz/interactive-questionnaire/releases/latest/interactive-questionnaire.skill
+- `.zip`: https://static.duskykite.xyz/interactive-questionnaire/releases/latest/interactive-questionnaire.zip
+
+GitHub Releases carry the same files: https://github.com/duskykitecn/interactive-questionnaire/releases/latest
+
+Build locally:
 
 ```bash
 python scripts/package.py
 ```
 
-例如 claude.ai 在 **设置 → 功能（Settings → Capabilities）** 的 Skills 区域上传（需相应套餐并开启代码执行；自定义技能通常仅对当前账号生效）；Claude API 则通过 `/v1/skills` 上传后再引用返回的 `skill_id`。
+On claude.ai, upload under **Settings → Capabilities** in the Skills section (plan and code-execution requirements apply; custom skills are usually account-scoped). The Claude API uses `POST /v1/skills`, then the returned `skill_id`.
 
-## 用法
+## Usage
 
-- **触发**：对话中点名 `interactive-questionnaire`（或在支持的应用里用斜杠命令 `/interactive-questionnaire`）显式启用；启用后凡智能体需要向你提问的场合都会按本技能组织。
-- **文字版作答**：选择题按选项字母回答（多选给多个字母，如 `1: a,c`），自由题直接写文字。
-- **HTML 问卷作答**：逐题填写（每题都可点「＋ 改用文字填写」换成自由文字，或提出异议），完成后点「复制结果」，把 JSON 粘贴回对话。
-- **结果 JSON**：每题一个条目，三种形态——`answer`（按控件作答，带 `dirty` 标记区分是否改过默认值）、`custom`（自由文字）、`objection`（异议）；另有 `system` 元信息（主题、展示 / 折叠模式）。字段契约详见 [`interactive-questionnaire/SKILL.md`](interactive-questionnaire/SKILL.md)。
-- **停止**：明确告诉智能体停用即可。
+- **Enable**: name `interactive-questionnaire` in the conversation, or use `/interactive-questionnaire` where the host supports slash commands. After that, every question the agent needs to ask you goes through this skill.
+- **Plain-text answers**: lettered choices (several letters for multi-select, e.g. `1: a,c`); free-text questions as ordinary sentences.
+- **HTML form**: fill each field (every field can switch to free text or record an objection), then Copy result and paste the JSON back.
+- **Result JSON**: one entry per question — `answer` (control value, plus `dirty` if you changed the default), `custom` (free text), or `objection`. A `system` object holds theme and display/fold mode. The contract is in [`interactive-questionnaire/SKILL.md`](interactive-questionnaire/SKILL.md).
+- **Stop**: tell the agent to stop using this skill.
 
-## 目录结构
+## Layout
 
 ```
-interactive-questionnaire/            ← 仓库根
-├── README.md                         ← 本文件
+interactive-questionnaire/            ← repo root
+├── README.md                         ← this file
+├── README.zh-CN.md                   ← Simplified Chinese
 ├── LICENSE
-├── CHANGELOG.md                      ← 版本记录（Keep a Changelog）
-├── PUBLISHING.md                     ← 维护者手册：发版流程、GitHub/Gitee/CNB 多平台同步
+├── CHANGELOG.md                      ← Keep a Changelog
+├── PUBLISHING.md                     ← maintainer handbook (release + GitHub/Gitee/CNB)
 ├── scripts/
-│   ├── package.py                    ← 本地打包脚本（仅需 Python 3 标准库）
-│   └── build_site.py                 ← 把 demo.html 打成 /项目名/ 静态站点
+│   ├── package.py                    ← local packager (Python 3 stdlib only)
+│   └── build_site.py                 ← flatten demo.html to /project-name/
 ├── .github/workflows/
-│   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
-│   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/static（默认关闭）
-│   └── sync-mirrors.yml              ← 可选：GitHub Actions 推镜像（默认关闭；CNB 请用 .cnb.yml git-sync）
-├── .cnb.yml                          ← CNB 镜像：定时 git-sync 从 GitHub 拉取
-└── interactive-questionnaire/        ← 技能实体（安装/打包的对象就是这一层）
-    ├── SKILL.md                      ← 入口：路由规则、文字版约定、装配流程、JSON 契约
+│   ├── release.yml                   ← v* tag → GitHub Release + static hub packages
+│   ├── deploy-site.yml               ← optional: push demo into duskykitecn/static
+│   └── sync-mirrors.yml              ← optional GitHub→mirror push (off; CNB uses .cnb.yml)
+├── .cnb.yml                          ← CNB mirror: cron git-sync from GitHub
+└── interactive-questionnaire/        ← the skill (this is what you install)
+    ├── SKILL.md                      ← routing, text convention, assembly, JSON contract
     ├── assets/
-    │   ├── template.html             ← HTML 问卷外壳模板
-    │   └── demo.html                 ← 全组件演示页
+    │   ├── template.html             ← HTML questionnaire shell
+    │   └── demo.html                 ← all-component demo
     └── references/
-        ├── components.md             ← 组件登记表与装配细则
-        └── snippets/                 ← 12 种组件片段（每种一个 .html）
+        ├── components.md             ← component registry
+        └── snippets/                 ← 12 component HTML snippets
 ```
 
-## 本地打包
+## Local packaging
 
 ```bash
-python scripts/package.py          # 版本号自动取 CHANGELOG.md 最新一条
-python scripts/package.py 1.2.0    # 或显式指定
+python scripts/package.py          # version from the latest CHANGELOG.md entry
+python scripts/package.py 1.2.0    # or pass a version
 ```
 
-产物在 `dist/` 下：`interactive-questionnaire-vX.Y.Z.skill` 与同内容的 `.zip`。
+Output lands in `dist/`: `interactive-questionnaire-vX.Y.Z.skill` and a `.zip` with the same contents.
 
-## 版本与发布
+## Versioning and release
 
-版本号遵循 SemVer，变更记录在 [CHANGELOG.md](CHANGELOG.md)。维护者推送 `vX.Y.Z` 标签后，GitHub Actions 会自动打包：GitHub Release 附上 `.skill` / `.zip`，并推到 `static` 总仓供国内下载。完整发版流程见 [PUBLISHING.md](PUBLISHING.md)。
+Versions follow SemVer; notable changes go in [CHANGELOG.md](CHANGELOG.md). Pushing a `vX.Y.Z` tag packs the skill, attaches `.skill` / `.zip` to the GitHub Release, and copies those files onto the `static` hub. The full maintainer flow is in [PUBLISHING.md](PUBLISHING.md) (Chinese).
 
-仓库地址：
+Repositories:
 
-- GitHub（主库）：https://github.com/duskykitecn/interactive-questionnaire
-- Gitee（镜像）：https://gitee.com/duskykite/interactive-questionnaire
-- CNB（镜像）：https://cnb.cool/DuskyKite/interactive-questionnaire
+- GitHub (canonical): https://github.com/duskykitecn/interactive-questionnaire
+- Gitee (mirror): https://gitee.com/duskykite/interactive-questionnaire
+- CNB (mirror): https://cnb.cool/DuskyKite/interactive-questionnaire
 
-## 许可证
+## License
 
-本项目采用 [CC BY-NC 4.0](LICENSE)（署名-非商业性使用）许可：允许复制、修改与再分发，须署名并注明改动，**禁止商业用途**；商业授权请联系作者。协议原文见[知识共享官网](https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hans)。
+[CC BY-NC 4.0](LICENSE): copy, adapt, and redistribute with attribution and a note of changes; **no commercial use**. Ask the author for a commercial license. The legal text is on [Creative Commons](https://creativecommons.org/licenses/by-nc/4.0/).

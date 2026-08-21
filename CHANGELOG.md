@@ -18,7 +18,8 @@
 ### 变更
 
 - 对外文案不再限定 Claude：提问方统称智能体；本仓库按 Agent Skills 规范称为智能体技能。安装改为「放入智能体应用的技能目录 / 压缩包上传」，产品名仅作为应用示例。演示页与问卷模板的回传提示、技能正文中的「skill / artifact」同步改为标准称呼。
-- README 演示与下载入口改为 `static.` 子域（国内 / 海外）+ 本仓库 GitHub Pages。
+- README 演示与下载入口改为 `static.` 子域（国内 / 海外）+ 本仓库 GitHub Pages；下载区直接给出两套完整 URL。
+- 对外说明拆成英文 [`README.md`](README.md) 与简体中文 [`README.zh-CN.md`](README.zh-CN.md)。
 
 ## [1.0.0] - 2026-07-10
 
