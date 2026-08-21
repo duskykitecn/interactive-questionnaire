@@ -1,14 +1,15 @@
 # CNB 镜像仓：定时从 GitHub 主库拉取（tencentcom/git-sync）。
-# 密钥在组织密钥仓 DuskyKite/secrets，用 imports 注入；不要把令牌写进本文件。
+# 密钥在组织密钥仓 DuskyKite/secrets，用插件任务上的 imports 注入。
+# 密钥文件若声明了 allow_images，imports 不能写在流水线层，只能写在插件任务上。
 # 勿与 GitHub Actions 的 CNB_SYNC_ENABLED 同时打开，两边对推会互相覆盖。
 main:
   "crontab: 0 */2 * * *":
     - name: sync from github
-      imports:
-        - https://cnb.cool/DuskyKite/secrets/-/blob/main/github-interactive-questionnaire.yml
       stages:
         - name: sync from github
           image: tencentcom/git-sync
+          imports:
+            - https://cnb.cool/DuskyKite/secrets/-/blob/main/github-interactive-questionnaire.yml
           settings:
             target_url: https://github.com/duskykitecn/interactive-questionnaire.git
             auth_type: https
