@@ -17,7 +17,7 @@
 
 ### 变更
 
-- GitHub Release 说明改为固定模板：写入该版本国内 / 海外下载地址，并只保留一条 Changelog 链接；关掉 `generate_release_notes`，避免重复跑 workflow 叠出多段相同说明。
+- GitHub Release 说明改为固定模板：写入该版本国内 / 海外下载地址，并只保留一条 Changelog 链接；关掉 `generate_release_notes`，避免重复跑 workflow 叠出多段相同说明。补跑旧标签时从触发本次 workflow 的提交取回 `write_release_body.py`，避免旧树里没有该脚本。
 - 对外文案不再限定 Claude：提问方统称智能体；本仓库按 Agent Skills 规范称为智能体技能。安装改为「放入智能体应用的技能目录 / 压缩包上传」，产品名仅作为应用示例。演示页与问卷模板的回传提示、技能正文中的「skill / artifact」同步改为标准称呼。
 - README 演示与下载入口改为 `static.` 子域（国内 / 海外）+ 本仓库 GitHub Pages；下载区直接给出两套完整 URL。
 - 对外说明拆成英文 [`README.md`](README.md) 与简体中文 [`README.zh-CN.md`](README.zh-CN.md)。

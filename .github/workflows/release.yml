@@ -2,6 +2,7 @@
 # Release 正文写入该版本国内 / 海外下载地址（覆盖旧说明，避免重复跑 workflow 叠 Changelog）。
 # 总仓同步默认关闭。启用方法见 PUBLISHING.md「静态托管」。
 # workflow_dispatch 用于把已有标签（如 v1.0.0）补推到总仓，不必重打标签。
+# 补跑会检出该标签（旧标签没有 write_release_body.py），写说明前从触发本次运行的提交取回该脚本。
 name: Release
 
 on:
@@ -38,6 +39,12 @@ jobs:
         env:
           VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
         run: python scripts/package.py "${VERSION#v}"
+
+      - name: 取回写说明脚本
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 --no-tags origin ${{ github.sha }}
+          git checkout ${{ github.sha }} -- scripts/write_release_body.py
 
       - name: 写 Release 说明
         env:
