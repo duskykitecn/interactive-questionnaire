@@ -61,7 +61,7 @@ jobs:
           path: pages-hub
 
       - name: 只更新本项目目录并推送
-        working_directory: pages-hub
+        working-directory: pages-hub
         env:
           PROJECT_SLUG: interactive-questionnaire
         run: |
