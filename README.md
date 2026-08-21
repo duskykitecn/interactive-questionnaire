@@ -22,11 +22,11 @@
 
 **在线演示**（三处同一份 `demo.html`）：
 
-- 国内：https://pages.duskykite.com.cn/interactive-questionnaire/
-- 海外：https://pages.duskykite.xyz/interactive-questionnaire/
+- 国内：https://static.duskykite.com.cn/interactive-questionnaire/
+- 海外：https://static.duskykite.xyz/interactive-questionnaire/
 - GitHub Pages：https://duskykitecn.github.io/interactive-questionnaire/
 
-全部 12 种组件（明暗主题、异议与「改用文字填写」、结果 JSON）。push 到 `main` 后本仓库 GitHub Pages 自动更新；自定义域名走组织 `pages` 总仓的 `/interactive-questionnaire/`，首次接入见 [PUBLISHING.md](PUBLISHING.md)「演示站」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
+全部 12 种组件（明暗主题、异议与「改用文字填写」、结果 JSON）。push 到 `main` 后本仓库 GitHub Pages 自动更新；自定义域名走组织 `static` 总仓的 `/interactive-questionnaire/`，首次接入见 [PUBLISHING.md](PUBLISHING.md)「静态托管」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
 
 ## 安装
 
@@ -56,13 +56,18 @@ Windows 将 `~` 换成 `%USERPROFILE%`。
 
 ### 以压缩包上传
 
-部分智能体应用只接受压缩包。先打包：
+部分智能体应用只接受压缩包。国内请走静态托管（不经过 GitHub）：
+
+- `.skill`：https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.skill
+- `.zip`：https://static.duskykite.com.cn/interactive-questionnaire/releases/latest/interactive-questionnaire.zip
+
+海外同一路径把主机名换成 `static.duskykite.xyz`。GitHub Releases 仍有同名附件。压缩包以技能文件夹为根（`interactive-questionnaire/SKILL.md`）。上传入口若只认 `.zip` 就用后者。
+
+本地打包：
 
 ```bash
 python scripts/package.py
 ```
-
-产物在 `dist/`：`interactive-questionnaire-vX.Y.Z.skill` 与同内容的 `.zip`。压缩包以技能文件夹为根（`interactive-questionnaire/SKILL.md`），与 Agent Skills 的 `.skill` 包结构一致。上传入口若只认 `.zip` 就用后者。
 
 例如 claude.ai 在 **设置 → 功能（Settings → Capabilities）** 的 Skills 区域上传（需相应套餐并开启代码执行；自定义技能通常仅对当前账号生效）；Claude API 则通过 `/v1/skills` 上传后再引用返回的 `skill_id`。
 
@@ -87,7 +92,7 @@ interactive-questionnaire/            ← 仓库根
 │   └── build_site.py                 ← 把 demo.html 打成 /项目名/ 静态站点
 ├── .github/workflows/
 │   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
-│   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/pages（默认关闭）
+│   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/static（默认关闭）
 │   └── sync-mirrors.yml              ← 可选：GitHub Actions 推镜像（默认关闭；CNB 请用 .cnb.yml git-sync）
 ├── .cnb.yml                          ← CNB 镜像：定时 git-sync 从 GitHub 拉取
 └── interactive-questionnaire/        ← 技能实体（安装/打包的对象就是这一层）
@@ -111,7 +116,7 @@ python scripts/package.py 1.2.0    # 或显式指定
 
 ## 版本与发布
 
-版本号遵循 SemVer，变更记录在 [CHANGELOG.md](CHANGELOG.md)。维护者推送 `vX.Y.Z` 标签后，GitHub Actions 会自动打包并创建附带 `.skill` / `.zip` 的 Release；完整发版流程与 GitHub / Gitee / CNB 多平台同步方案见 [PUBLISHING.md](PUBLISHING.md)。
+版本号遵循 SemVer，变更记录在 [CHANGELOG.md](CHANGELOG.md)。维护者推送 `vX.Y.Z` 标签后，GitHub Actions 会自动打包：GitHub Release 附上 `.skill` / `.zip`，并推到 `static` 总仓供国内下载。完整发版流程见 [PUBLISHING.md](PUBLISHING.md)。
 
 仓库地址：
 

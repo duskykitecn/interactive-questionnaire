@@ -11,13 +11,14 @@
 ### 新增
 
 - 演示站构建脚本 `scripts/build_site.py`：把 `demo.html` 打成可挂在 `/interactive-questionnaire/` 下的静态站点。
-- GitHub Actions `deploy-site.yml`：push `main` 后只更新 `duskykitecn/pages` 里本项目那一层（默认关闭）。`pages.com.cn` / `pages.xyz` 各接一个 EdgeOne Makers 免费项目（国内 / 全球不含大陆），不走 GitHub 自定义域名。
+- GitHub Actions `deploy-site.yml`：push `main` 后只更新 `duskykitecn/static` 里本项目演示页（默认关闭）。`static.com.cn` / `static.xyz` 各接一个 EdgeOne Makers 免费项目（国内 / 全球不含大陆），不走 GitHub 自定义域名。
+- 发版时把 `.skill` / `.zip` 推到总仓 `/interactive-questionnaire/releases/`，国内下载不再依赖 GitHub Releases。
 - 本仓库增加 `.cnb.yml`：CNB 镜像用 git-sync 定时从 GitHub 拉取（与 GitHub Actions 推 CNB 不要同时开）。
 
 ### 变更
 
 - 对外文案不再限定 Claude：提问方统称智能体；本仓库按 Agent Skills 规范称为智能体技能。安装改为「放入智能体应用的技能目录 / 压缩包上传」，产品名仅作为应用示例。演示页与问卷模板的回传提示、技能正文中的「skill / artifact」同步改为标准称呼。
-- README 演示入口改为 `pages.` 子域（国内 / 海外）+ 本仓库 GitHub Pages。
+- README 演示与下载入口改为 `static.` 子域（国内 / 海外）+ 本仓库 GitHub Pages。
 
 ## [1.0.0] - 2026-07-10
 

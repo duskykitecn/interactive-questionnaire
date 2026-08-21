@@ -1,10 +1,18 @@
-# 推送 vX.Y.Z 标签时：打包技能 → 创建 GitHub Release 并附上 .skill / .zip
+# 推送 vX.Y.Z 标签时：打包技能 → 创建 GitHub Release → 把 .skill / .zip 推进 static 总仓。
+# 总仓同步默认关闭。启用方法见 PUBLISHING.md「静态托管」。
+# workflow_dispatch 用于把已有标签（如 v1.0.0）补推到总仓，不必重打标签。
 name: Release
 
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 不含 v 的版本号，例如 1.0.0
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -15,19 +23,60 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref }}
 
       - name: 安装 Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 
-      - name: 打包技能（版本号取自标签）
-        run: python scripts/package.py "${GITHUB_REF_NAME#v}"
+      - name: 打包技能
+        env:
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: python scripts/package.py "${VERSION#v}"
 
-      - name: 创建 Release 并上传产物
+      - name: 创建或更新 GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
           files: |
             dist/*.skill
             dist/*.zip
           generate_release_notes: true
+
+      - name: 推送发版包到 static 总仓
+        if: ${{ vars.STATIC_DEPLOY_ENABLED == 'true' }}
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ vars.STATIC_REPO != '' && vars.STATIC_REPO || 'duskykitecn/static' }}
+          token: ${{ secrets.STATIC_DEPLOY_TOKEN }}
+          path: static-hub
+
+      - name: 写入 releases/ 并推送
+        if: ${{ vars.STATIC_DEPLOY_ENABLED == 'true' }}
+        working-directory: static-hub
+        env:
+          PROJECT_SLUG: interactive-questionnaire
+          TAG: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+        run: |
+          set -euo pipefail
+          skill=$(ls ../dist/*.skill)
+          zipf=$(ls ../dist/*.zip)
+          test -f "$skill"
+          test -f "$zipf"
+          mkdir -p "${PROJECT_SLUG}/releases/${TAG}" "${PROJECT_SLUG}/releases/latest"
+          cp "$skill" "${PROJECT_SLUG}/releases/${TAG}/"
+          cp "$zipf" "${PROJECT_SLUG}/releases/${TAG}/"
+          cp "$skill" "${PROJECT_SLUG}/releases/latest/${PROJECT_SLUG}.skill"
+          cp "$zipf" "${PROJECT_SLUG}/releases/latest/${PROJECT_SLUG}.zip"
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "${PROJECT_SLUG}/releases" .nojekyll
+          if git diff --cached --quiet; then
+            echo "总仓中 ${PROJECT_SLUG}/releases/ 无变化，跳过推送"
+            exit 0
+          fi
+          git commit -m "chore: add ${PROJECT_SLUG} ${TAG} packages"
+          git push

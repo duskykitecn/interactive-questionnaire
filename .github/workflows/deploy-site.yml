@@ -1,10 +1,10 @@
-# push 到 main 时：构建演示站并推到组织 pages 总仓（只改本项目那一层目录）。
+# push 到 main 时：构建演示站并推到组织 static 总仓（只改本项目演示页，不动 releases/）。
 # 本仓库的 GitHub Pages 仍由仓库根 index.html 随 main 自动发布，无需本工作流。
-# 总仓同步默认关闭。启用方法见 PUBLISHING.md「演示站」：
-#   Secrets: PAGES_DEPLOY_TOKEN（只授 duskykitecn/pages 写权限的 PAT，不要贴进对话）
-#   Variables: PAGES_DEPLOY_ENABLED=true
-#             PAGES_REPO=duskykitecn/pages   （可改，须与总仓一致）
-# 未打开开关时 pages-hub 任务直接跳过。
+# 总仓同步默认关闭。启用方法见 PUBLISHING.md「静态托管」：
+#   Secrets: STATIC_DEPLOY_TOKEN（只授 duskykitecn/static 写权限的 PAT，不要贴进对话）
+#   Variables: STATIC_DEPLOY_ENABLED=true
+#             STATIC_REPO=duskykitecn/static   （可改，须与总仓一致）
+# 未打开开关时 static-hub 任务直接跳过。
 name: Deploy demo site
 
 on:
@@ -42,9 +42,9 @@ jobs:
           path: dist/site
           retention-days: 7
 
-  pages-hub:
+  static-hub:
     needs: build
-    if: ${{ vars.PAGES_DEPLOY_ENABLED == 'true' }}
+    if: ${{ vars.STATIC_DEPLOY_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 下载构建产物
@@ -53,30 +53,31 @@ jobs:
           name: site
           path: dist/site
 
-      - name: 检出 pages 总仓
+      - name: 检出 static 总仓
         uses: actions/checkout@v7
         with:
-          repository: ${{ vars.PAGES_REPO != '' && vars.PAGES_REPO || 'duskykitecn/pages' }}
-          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
-          path: pages-hub
+          repository: ${{ vars.STATIC_REPO != '' && vars.STATIC_REPO || 'duskykitecn/static' }}
+          token: ${{ secrets.STATIC_DEPLOY_TOKEN }}
+          path: static-hub
 
-      - name: 只更新本项目目录并推送
-        working-directory: pages-hub
+      - name: 只更新本项目演示页并推送
+        working-directory: static-hub
         env:
           PROJECT_SLUG: interactive-questionnaire
         run: |
           set -euo pipefail
           src="../dist/site/${PROJECT_SLUG}"
           test -f "${src}/index.html"
-          rm -rf "${PROJECT_SLUG}"
-          mkdir -p "${PROJECT_SLUG}"
-          cp -R "${src}/." "${PROJECT_SLUG}/"
+          test -f "${src}/assets/demo.html"
+          mkdir -p "${PROJECT_SLUG}/assets"
+          cp "${src}/index.html" "${PROJECT_SLUG}/index.html"
+          cp "${src}/assets/demo.html" "${PROJECT_SLUG}/assets/demo.html"
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- "${PROJECT_SLUG}" .nojekyll
+          git add -- "${PROJECT_SLUG}/index.html" "${PROJECT_SLUG}/assets/demo.html" .nojekyll
           if git diff --cached --quiet; then
-            echo "总仓中 ${PROJECT_SLUG}/ 无变化，跳过推送"
+            echo "总仓中 ${PROJECT_SLUG}/ 演示页无变化，跳过推送"
             exit 0
           fi
           git commit -m "chore: update ${PROJECT_SLUG} demo"
