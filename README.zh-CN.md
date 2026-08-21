@@ -21,13 +21,19 @@
 
 ## 效果预览
 
-**在线演示**（三处同一份 `demo.html`）：
+没有这份技能时，智能体把问题塞进一段分析里；你也只能写一段话回去。
+
+<p align="center">
+  <img src="docs/preview/without.zh-CN.svg" alt="没有这份技能时：八个问题夹在智能体的一段话里，你也只能写一段话回去" width="800">
+</p>
+
+启用之后，复杂的提问会变成一份能点的问卷。**在线演示**（三处同一份 `demo.html`）：
 
 - 国内：https://static.duskykite.com.cn/interactive-questionnaire/
 - 海外：https://static.duskykite.xyz/interactive-questionnaire/
 - GitHub Pages：https://duskykitecn.github.io/interactive-questionnaire/
 
-全部 12 种组件（明暗主题、异议与「改用文字填写」、结果 JSON）。push 到 `main` 后本仓库 GitHub Pages 自动更新；自定义域名走组织 `static` 总仓的 `/interactive-questionnaire/`，首次接入见 [PUBLISHING.md](PUBLISHING.md)「静态托管」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
+12 种组件都在：明暗主题、异议、「改用文字填写」、结果 JSON。第一次打开会弹出引导，不想看可以跳过，浏览器会记下；顶栏问号能再打开。push 到 `main` 后本仓库 GitHub Pages 会自己更新；自定义域名走组织 `static` 总仓的 `/interactive-questionnaire/`，第一次接入见 [PUBLISHING.md](PUBLISHING.md)「静态托管」。也可以克隆后直接打开 [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html)。
 
 ## 安装
 
@@ -103,8 +109,9 @@ interactive-questionnaire/            ← 仓库根
 ├── .github/workflows/
 │   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
 │   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/static（默认关闭）
-│   └── sync-mirrors.yml              ← 可选：GitHub Actions 推镜像（默认关闭；CNB 请用 .cnb.yml git-sync）
+│   └── sync-mirrors.yml              ← Gitee 开 GITEE_SYNC_ENABLED；不要开 CNB_SYNC_ENABLED（CNB 用 .cnb.yml 拉）
 ├── .cnb.yml                          ← CNB 镜像：定时 git-sync 从 GitHub 拉取
+├── docs/preview/                     ← README 痛点静图（中 / 英 SVG）
 └── interactive-questionnaire/        ← 技能实体（安装/打包的对象就是这一层）
     ├── SKILL.md                      ← 入口：路由规则、文字版约定、装配流程、JSON 契约
     ├── assets/

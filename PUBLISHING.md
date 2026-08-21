@@ -7,7 +7,7 @@
 - **主库 GitHub**：https://github.com/duskykitecn/interactive-questionnaire ——唯一的开发源头，承担 CI（自动打包）、Releases（分发 `.skill` / `.zip`）、Issue 与 PR。
 - **镜像 Gitee**：https://gitee.com/duskykite/interactive-questionnaire
 - **镜像 CNB**：https://cnb.cool/DuskyKite/interactive-questionnaire
-- 同步策略：当前采用**平台自带工具**（下文「当前同步方案」）；**不在镜像仓库上直接提交**，镜像更新以覆盖为准。
+- 同步策略：Gitee 由 GitHub Actions 推送（`GITEE_SYNC_ENABLED`）；CNB 由 `.cnb.yml` git-sync 定时拉取。同一镜像不要推、拉两套同时开。**不在镜像仓库上直接提交**，镜像更新以覆盖为准。
 
 > 若日后想改以 CNB 为主库开发：把「打标签自动发版」从 GitHub Actions 迁到 `.cnb.yml`（tag 触发流水线执行 `scripts/package.py`），同步方向反转即可，其余流程不变。
 
@@ -28,12 +28,16 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-## 镜像初始化与日常同步（当前方案：平台自带工具）
+## 镜像初始化与日常同步
 
 ### Gitee
 
-- **首次**：网页右上角「+ → 从 GitHub / GitLab 导入仓库」，源填 `https://github.com/duskykitecn/interactive-questionnaire`，路径落在 `duskykite/interactive-questionnaire`。（若已手动建了空仓库，也可本地 `git push --mirror git@gitee.com:duskykite/interactive-questionnaire.git` 一次灌入。）
-- **日常**：每次 GitHub 发版后到 Gitee 仓库页点「同步」；若导入时选了 GitHub 源，可在仓库设置里打开自带的 GitHub 定时同步，就不用每次手点。镜像上关掉 Issue / PR，简介写明请到 GitHub。
+Gitee 官方「仓库镜像管理」选不到 GitHub **组织仓**（只能选个人仓），所以日常同步走主库 GitHub Actions 推送，不要靠 Gitee 网页从 GitHub 拉。
+
+- **首次**：网页右上角「+ → 从 GitHub / GitLab 导入仓库」，源填 `https://github.com/duskykitecn/interactive-questionnaire`，路径落在 `duskykite/interactive-questionnaire`。（若已手动建了空仓库，也可本地 `git push --mirror git@gitee.com:duskykite/interactive-questionnaire.git` 灌一次。）
+- **打开推送**：主库 Secrets 加 `GITEE_SSH_PRIVATE_KEY`（对应公钥加到 Gitee **个人 SSH 公钥**，标题如 `github-actions-gitee`；部署公钥只读，推不上去）。Variables 加 `GITEE_SYNC_ENABLED=true`。之后每次 push `main` 或 `v*` 标签，`sync-mirrors.yml` 强制推到 Gitee。
+- 仓库页「同步」只留作备用。不要再打开 Gitee 自带的 GitHub 定时拉取，两套会对打。
+- 镜像上关掉 Issue / PR / Wiki；简介写明请到 GitHub。
 
 ### CNB
 
@@ -51,7 +55,6 @@ git push --mirror https://cnb.cool/DuskyKite/interactive-questionnaire.git
 1. 建一个 GitHub fine-grained PAT，只授本仓库 Contents **只读**（公开仓也建议带令牌，避免匿名限额）。
 2. 在 CNB 镜像仓的流水线 / 环境变量里加 `GIT_USERNAME`（GitHub 用户名）、`GIT_ACCESS_TOKEN`（上一步 PAT）。更稳妥是放进 CNB 密钥库再 `imports`，不要写进 YAML。
 3. `.cnb.yml` 随主库同步到 CNB 后，crontab 每 2 小时（UTC）从 GitHub pull，含标签、允许强制覆盖。可在 CNB 流水线页点「立即运行」等不及定时。
-4. 镜像仓关掉 Issue / PR（或简介写明请到 GitHub），避免有人在镜像上改代码。
 
 **日常**：主库 `git push` 之后最多等一个 crontab 周期；发版打了 `v*` 标签也会被 `push_tags` 拉过去。GitHub Release 附件不会出现在 CNB。国内下载走 `static.duskykite.com.cn`，见下文「静态托管」。
 
@@ -158,7 +161,7 @@ gh repo create duskykitecn/static --public --add-readme --description "DuskyKite
 5. 打标签并推送：`git tag vX.Y.Z && git push origin vX.Y.Z`。
 6. GitHub Actions（`release.yml`）自动打包：先把 `.skill` / `.zip` 写入 `static` 总仓 `releases/`，再创建或更新 GitHub Release（正文含该版本国内 / 海外下载地址，并覆盖旧说明）。检查 Release 正文链接与 `static.duskykite.com.cn/.../releases/latest/` 都能打开。补跑已有标签时从 **main** 触发 `workflow_dispatch`（不要用旧标签上的 workflow）；工作流会检出该标签打包，再从触发提交取回写说明脚本。
 7. 若改过 `demo.html`：push 到 `main` 后本仓库 GitHub Pages 自动更新；打开了 `STATIC_DEPLOY_ENABLED` 则 `static.` 子域随总仓一起更新（见上文「静态托管」）。
-8. 同步镜像：Gitee 点「同步」（或等其 GitHub 镜像定时）；CNB 由 `.cnb.yml` 的 git-sync crontab 拉取（见上文「CNB」）。
+8. 同步镜像：Gitee 由 `sync-mirrors.yml` 随 push 自动推（需 `GITEE_SYNC_ENABLED`）；CNB 由 `.cnb.yml` 的 git-sync crontab 拉取（见上文「CNB」）。等不及定时可在 CNB 流水线点「立即运行」。
 
 ## 版本号判据（针对本技能的 SemVer 语义）
 
@@ -174,17 +177,17 @@ gh repo create duskykitecn/static --public --add-readme --description "DuskyKite
 
 **GitHub 主库**
 
-- About：Description 与 Topics（如 `agent-skills`）；Website 填国内演示 `https://static.duskykite.com.cn/interactive-questionnaire/`。
+- About：Description 与 Topics（如 `agent-skills`）；Website 填本仓 GitHub Pages `https://duskykitecn.github.io/interactive-questionnaire/`（国内演示写在 README，不要改成 `static.`）。
 - Issues / PR 开在这里；Releases 由 `v*` 标签 + `release.yml` 生成。
 - Settings → Pages：源 `main` 根目录（本仓演示已有 `index.html`）。
-- 不要打开 `CNB_SYNC_ENABLED`（与 CNB git-sync 对推）；Gitee 若已用网页「同步」，也不要再开 `GITEE_SYNC_ENABLED`。
+- 打开 `GITEE_SYNC_ENABLED`（Gitee 网页拉不到组织仓）。不要打开 `CNB_SYNC_ENABLED`（与 CNB git-sync 对推）。
 
 **Gitee 镜像**
 
-- 用「从 GitHub 导入」或一次 `git push --mirror`；简介写明镜像、Issue 请到 GitHub。
-- 关掉或忽略镜像上的 Issue / PR / Wiki。
-- 日常点仓库页「同步」，或导入后开启 Gitee 自带的 GitHub 定时同步。
-- 不必每次上传发行版附件，国内下载走 `static.` 子域。
+- 用「从 GitHub 导入」或一次 `git push --mirror` 灌入；之后靠 `GITEE_SYNC_ENABLED` + `GITEE_SSH_PRIVATE_KEY` 推送。
+- 简介写明镜像、Issue 请到 GitHub。关掉 Issue / PR / Wiki。
+- 仓库页「同步」只留备用；不要再开 Gitee 自带的 GitHub 定时拉取。
+- 不必上传发行版附件，国内下载走 `static.` 子域。
 
 **CNB 镜像**
 
@@ -198,7 +201,7 @@ gh repo create duskykitecn/static --public --add-readme --description "DuskyKite
 - 每个项目单独接 EdgeOne Pages 或 COS。
 - 在 Gitee / CNB 直接 commit（下次同步会被覆盖）。
 
-## 备选同步方案（暂未采用，备查）
+## 备选同步方案（一般不用）
 
 ### 方案 A：一次 push 同推三个远程（零依赖）
 
@@ -211,9 +214,9 @@ git push && git push origin --tags
 
 注意：`--add --push` 第一次执行会清掉默认 push 地址，所以 GitHub 地址也要显式加一遍（如上）。
 
-### 方案 B：GitHub Actions 自动镜像
+### 方案 B 的 CNB 推送（不要与 crontab 同时开）
 
-`.github/workflows/sync-mirrors.yml` 已按上述三个地址写好，默认关闭。启用 Gitee 侧：Secrets 加 `GITEE_SSH_PRIVATE_KEY`（对应公钥加到 Gitee）+ Variables 加 `GITEE_SYNC_ENABLED=true`；启用 CNB 侧：Secrets 加 `CNB_TOKEN` + Variables 加 `CNB_SYNC_ENABLED=true`。此后每次 push 到 `main` 或推送 `v*` 标签自动强制镜像。
+`.github/workflows/sync-mirrors.yml` 的 **Gitee job 已是当前方案**（`GITEE_SYNC_ENABLED=true`）。CNB job 保持关闭：不要设 `CNB_SYNC_ENABLED`，否则会与 `.cnb.yml` git-sync 对推。若以后改成主库推 CNB，再加 `CNB_TOKEN` 并关掉 crontab。
 
 ## 常见坑
 

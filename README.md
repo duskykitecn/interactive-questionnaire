@@ -21,13 +21,19 @@ Once this skill is invoked, it stays in effect for the rest of the conversation.
 
 ## Demo
 
-The same `demo.html` is served in three places:
+Without this skill, the agent buries questions in one long reply. You type a paragraph back.
+
+<p align="center">
+  <img src="docs/preview/without.en.svg" alt="Without this skill: eight questions sit inside one long agent reply; you type a paragraph back" width="800">
+</p>
+
+With the skill, longer asks turn into a form you can click through. The same `demo.html` is served in three places:
 
 - China: https://static.duskykite.com.cn/interactive-questionnaire/
 - International: https://static.duskykite.xyz/interactive-questionnaire/
 - GitHub Pages: https://duskykitecn.github.io/interactive-questionnaire/
 
-All 12 components, light/dark theme, objections, “answer in text instead”, and result JSON. After a push to `main`, this repo’s GitHub Pages updates on its own; the custom hostnames are served from the org `static` hub under `/interactive-questionnaire/`. Maintainer setup is in [PUBLISHING.md](PUBLISHING.md) (Chinese). You can also open [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html) locally.
+All 12 components are there: light/dark theme, objections, “answer in text instead”, and the result JSON. First visit pops a short tour; skip it if you want. The browser remembers. Click “?” in the toolbar to see it again. After a push to `main`, this repo’s GitHub Pages updates on its own; the custom hostnames are served from the org `static` hub under `/interactive-questionnaire/`. Maintainer setup is in [PUBLISHING.md](PUBLISHING.md) (Chinese). You can also open [`interactive-questionnaire/assets/demo.html`](interactive-questionnaire/assets/demo.html) locally.
 
 ## Install
 
@@ -103,8 +109,9 @@ interactive-questionnaire/            ← repo root
 ├── .github/workflows/
 │   ├── release.yml                   ← v* tag → GitHub Release + static hub packages
 │   ├── deploy-site.yml               ← optional: push demo into duskykitecn/static
-│   └── sync-mirrors.yml              ← optional GitHub→mirror push (off; CNB uses .cnb.yml)
+│   └── sync-mirrors.yml              ← Gitee via GITEE_SYNC_ENABLED; leave CNB_SYNC_ENABLED off (.cnb.yml pulls)
 ├── .cnb.yml                          ← CNB mirror: cron git-sync from GitHub
+├── docs/preview/                     ← README stills (zh-CN / en SVG)
 └── interactive-questionnaire/        ← the skill (this is what you install)
     ├── SKILL.md                      ← routing, text convention, assembly, JSON contract
     ├── assets/

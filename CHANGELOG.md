@@ -10,6 +10,8 @@
 
 ### 新增
 
+- README「效果预览」增加痛点静图（`docs/preview/without.zh-CN.svg` / `without.en.svg`）：问话夹在智能体一段回答里的对照，图不进技能包。
+- 演示页 `demo.html` 增加可跳过的新手引导（聚光灯 7 步：预选、改用文字、异议、单题还原、顶栏、预览/JSON、复制）。跳过或完成后写入 `localStorage`，同版本不再自动弹出；顶栏问号可重看。不进 `template.html`。
 - 演示站构建脚本 `scripts/build_site.py`：把 `demo.html` 打成可挂在 `/interactive-questionnaire/` 下的静态站点。
 - GitHub Actions `deploy-site.yml`：push `main` 后只更新 `duskykitecn/static` 里本项目演示页（默认关闭）。`static.com.cn` / `static.xyz` 各接一个 EdgeOne Makers 免费项目（国内 / 全球不含大陆），不走 GitHub 自定义域名。
 - 发版时把 `.skill` / `.zip` 推到总仓 `/interactive-questionnaire/releases/`，国内下载不再依赖 GitHub Releases。
@@ -17,6 +19,7 @@
 
 ### 变更
 
+- `PUBLISHING.md` 与 README 目录树改为现行同步：Gitee 开 `GITEE_SYNC_ENABLED` 由 Actions 推；CNB 仍用 git-sync 拉（关不掉 Issue / PR，简介写明即可）。GitHub About 的 Website 记为本仓 github.io，国内演示仍写在 README。
 - GitHub Release 说明改为固定模板：写入该版本国内 / 海外下载地址，并只保留一条 Changelog 链接；关掉 `generate_release_notes`，避免重复跑 workflow 叠出多段相同说明。补跑旧标签时从触发本次 workflow 的提交取回 `write_release_body.py`，避免旧树里没有该脚本。
 - CNB `.cnb.yml` 把密钥 `imports` 挪到 `git-sync` 插件任务上，以符合密钥仓 `allow_images` 只能被插件引用的规则。
 - 对外文案不再限定 Claude：提问方统称智能体；本仓库按 Agent Skills 规范称为智能体技能。安装改为「放入智能体应用的技能目录 / 压缩包上传」，产品名仅作为应用示例。演示页与问卷模板的回传提示、技能正文中的「skill / artifact」同步改为标准称呼。

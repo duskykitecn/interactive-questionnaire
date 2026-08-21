@@ -1,9 +1,7 @@
-# 可选：把主库自动镜像到 Gitee / CNB（方案 B，默认全部关闭）。
-# 启用方法见 PUBLISHING.md「方案 B」，两个镜像各自独立开关：
-#   Gitee: Secrets 加 GITEE_SSH_PRIVATE_KEY，Variables 加 GITEE_SYNC_ENABLED=true
-#   CNB : Secrets 加 CNB_TOKEN，          Variables 加 CNB_SYNC_ENABLED=true
-# 未配置对应变量时任务直接跳过，不会报错。
-# 注意：镜像是强制推送，Gitee / CNB 上的直接改动会被覆盖，统一只在主库开发。
+# Gitee：当前方案。Secrets 加 GITEE_SSH_PRIVATE_KEY，Variables 加 GITEE_SYNC_ENABLED=true。
+# CNB：不要设 CNB_SYNC_ENABLED（本仓用 .cnb.yml git-sync 拉）。需要改推时见 PUBLISHING.md。
+# 未配置对应变量时该 job 直接跳过，不会报错。
+# 镜像是强制推送，Gitee / CNB 上的直接改动会被覆盖，统一只在主库开发。
 name: Sync mirrors
 
 on:
