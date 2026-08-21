@@ -156,7 +156,7 @@ gh repo create duskykitecn/static --public --add-readme --description "DuskyKite
 3. 本地验证打包：`python scripts/package.py`，抽查 `dist/` 产物能正常解压、`SKILL.md` 在压缩包根级文件夹内。
 4. 提交并推送：`git add . && git commit -m "..." && git push`。
 5. 打标签并推送：`git tag vX.Y.Z && git push origin vX.Y.Z`。
-6. GitHub Actions（`release.yml`）自动打包：GitHub Release 附上 `.skill` / `.zip`，并写入 `static` 总仓 `releases/`。检查 GitHub Release 与 `static.duskykite.com.cn/.../releases/latest/` 都能打开。
+6. GitHub Actions（`release.yml`）自动打包：先把 `.skill` / `.zip` 写入 `static` 总仓 `releases/`，再创建或更新 GitHub Release（正文含该版本国内 / 海外下载地址，并覆盖旧说明）。检查 Release 正文链接与 `static.duskykite.com.cn/.../releases/latest/` 都能打开。
 7. 若改过 `demo.html`：push 到 `main` 后本仓库 GitHub Pages 自动更新；打开了 `STATIC_DEPLOY_ENABLED` 则 `static.` 子域随总仓一起更新（见上文「静态托管」）。
 8. 同步镜像：Gitee 点「同步」（或等其 GitHub 镜像定时）；CNB 由 `.cnb.yml` 的 git-sync crontab 拉取（见上文「CNB」）。
 

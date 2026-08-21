@@ -98,7 +98,8 @@ interactive-questionnaire/            ← repo root
 ├── PUBLISHING.md                     ← maintainer handbook (release + GitHub/Gitee/CNB)
 ├── scripts/
 │   ├── package.py                    ← local packager (Python 3 stdlib only)
-│   └── build_site.py                 ← flatten demo.html to /project-name/
+│   ├── build_site.py                 ← flatten demo.html to /project-name/
+│   └── write_release_body.py         ← GitHub Release notes (China / international URLs)
 ├── .github/workflows/
 │   ├── release.yml                   ← v* tag → GitHub Release + static hub packages
 │   ├── deploy-site.yml               ← optional: push demo into duskykitecn/static

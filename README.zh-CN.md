@@ -98,7 +98,8 @@ interactive-questionnaire/            ← 仓库根
 ├── PUBLISHING.md                     ← 维护者手册：发版流程、GitHub/Gitee/CNB 多平台同步
 ├── scripts/
 │   ├── package.py                    ← 本地打包脚本（仅需 Python 3 标准库）
-│   └── build_site.py                 ← 把 demo.html 打成 /项目名/ 静态站点
+│   ├── build_site.py                 ← 把 demo.html 打成 /项目名/ 静态站点
+│   └── write_release_body.py         ← GitHub Release 说明（国内 / 海外下载地址）
 ├── .github/workflows/
 │   ├── release.yml                   ← 推送 v* 标签 → 自动打包并发布 GitHub Release
 │   ├── deploy-site.yml               ← 可选：把演示站推到 duskykitecn/static（默认关闭）
