@@ -25,10 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 安装 Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 
@@ -36,7 +36,7 @@ jobs:
         run: python scripts/build_site.py
 
       - name: 上传构建产物
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site
           path: dist/site
@@ -48,13 +48,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 下载构建产物
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: site
           path: dist/site
 
       - name: 检出 pages 总仓
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ vars.PAGES_REPO != '' && vars.PAGES_REPO || 'duskykitecn/pages' }}
           token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
